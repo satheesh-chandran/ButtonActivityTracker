@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.step.krm.logapp.R
-import kotlin.random.Random
+import com.step.krm.logapp.data.LogRepositoryImpl
 
 class LogsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
@@ -28,9 +28,6 @@ class LogsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val numbers: List<Int> = List(100) {
-            Random.nextInt()
-        }
-        recyclerView.adapter = LogsViewAdapter(numbers)
+        recyclerView.adapter = LogsViewAdapter(LogRepositoryImpl.instance.getAllLogs())
     }
 }

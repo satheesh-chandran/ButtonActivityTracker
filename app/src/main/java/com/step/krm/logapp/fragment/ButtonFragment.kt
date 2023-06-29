@@ -1,13 +1,13 @@
 package com.step.krm.logapp.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.step.krm.logapp.R
+import com.step.krm.logapp.data.LogRepositoryImpl
 
 class ButtonFragment : Fragment() {
     override fun onCreateView(
@@ -19,15 +19,15 @@ class ButtonFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view.findViewById<Button>(R.id.button1).setOnClickListener {
-            Log.e("ButtonFragment", "Interaction with 'Button 1'")
+            LogRepositoryImpl.instance.addLog(1)
         }
 
         view.findViewById<Button>(R.id.button2).setOnClickListener {
-            Log.e("ButtonFragment", "Interaction with 'Button 2'")
+            LogRepositoryImpl.instance.addLog(2)
         }
 
         view.findViewById<Button>(R.id.button3).setOnClickListener {
-            Log.e("ButtonFragment", "Interaction with 'Button 3'")
+            LogRepositoryImpl.instance.addLog(3)
         }
 
         view.findViewById<Button>(R.id.all_logs).setOnClickListener {
@@ -38,7 +38,7 @@ class ButtonFragment : Fragment() {
         }
 
         view.findViewById<Button>(R.id.delete_logs).setOnClickListener {
-
+            LogRepositoryImpl.instance.removeAllLogs()
         }
     }
 }
