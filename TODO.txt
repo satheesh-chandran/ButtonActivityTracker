@@ -1,0 +1,7 @@
+Action Items
+
+1. Create a Basic fragment navigation with scrollable view
+2. Capture Button clicks in memory location
+3. Capture Button clicks on SQLite DB
+4. Introduce Hilt dependency injection for DB repositories
+5. Transform fragments views to Compose
