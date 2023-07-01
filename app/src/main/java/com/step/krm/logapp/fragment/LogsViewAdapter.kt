@@ -10,9 +10,8 @@ import com.step.krm.logapp.R
 import com.step.krm.logapp.data.LogDTO
 import java.sql.Date
 import java.sql.Timestamp
-import java.util.LinkedList
 
-class LogsViewAdapter(private val logs: LinkedList<LogDTO>) :
+class LogsViewAdapter(private val logs: List<LogDTO>) :
     RecyclerView.Adapter<LogsViewAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

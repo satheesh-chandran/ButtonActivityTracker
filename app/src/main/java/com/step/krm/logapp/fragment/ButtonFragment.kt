@@ -19,15 +19,15 @@ class ButtonFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view.findViewById<Button>(R.id.button1).setOnClickListener {
-            LogRepositoryImpl.instance.addLog(1)
+            requireActivity().baseContext.let { LogRepositoryImpl.instance(it).addLog(1) }
         }
 
         view.findViewById<Button>(R.id.button2).setOnClickListener {
-            LogRepositoryImpl.instance.addLog(2)
+            requireActivity().baseContext.let { LogRepositoryImpl.instance(it).addLog(2) }
         }
 
         view.findViewById<Button>(R.id.button3).setOnClickListener {
-            LogRepositoryImpl.instance.addLog(3)
+            requireActivity().baseContext.let { LogRepositoryImpl.instance(it).addLog(3) }
         }
 
         view.findViewById<Button>(R.id.all_logs).setOnClickListener {
@@ -38,7 +38,7 @@ class ButtonFragment : Fragment() {
         }
 
         view.findViewById<Button>(R.id.delete_logs).setOnClickListener {
-            LogRepositoryImpl.instance.removeAllLogs()
+            requireActivity().baseContext.let { LogRepositoryImpl.instance(it).removeAllLogs()}
         }
     }
 }

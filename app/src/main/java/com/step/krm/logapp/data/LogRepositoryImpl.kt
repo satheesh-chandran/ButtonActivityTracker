@@ -1,30 +1,45 @@
 package com.step.krm.logapp.data
 
-import java.util.LinkedList
+import android.content.Context
+import androidx.room.Room
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
-class LogRepositoryImpl private constructor(): LogRepository {
-    private var lastLogId: Int = 0;
-    private val logs = LinkedList<LogDTO>()
+class LogRepositoryImpl private constructor(private val logsDao: LogsDao) : LogRepository {
+    private val executorService: ExecutorService = Executors.newFixedThreadPool(4)
 
-    override fun addLog(buttonId: Int): LogDTO {
-        val log = LogDTO(++lastLogId, buttonId, System.currentTimeMillis())
-        logs.add(log)
-        return log
+    override fun addLog(buttonId: Int) {
+        executorService.execute {
+            logsDao.insertLog(buttonId, System.currentTimeMillis())
+        }
     }
 
-    override fun getAllLogs(): LinkedList<LogDTO> = logs
+    override fun getAllLogs(callback: (List<LogDTO>) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+             callback(logsDao.getAll())
+        }
+    }
 
     override fun removeAllLogs() {
-        logs.clear()
+        executorService.execute {
+            logsDao.nukeTable()
+        }
     }
 
     companion object {
         private var utilProject: LogRepositoryImpl? = null
 
-        val instance: LogRepositoryImpl
-            get() {
-                if (utilProject == null) utilProject = LogRepositoryImpl()
-                return utilProject!!
+        fun instance(context: Context): LogRepositoryImpl {
+            if (utilProject == null) {
+                val logDatabase = Room.databaseBuilder(
+                    context, LogDatabase::class.java, "log_app_data_store"
+                ).build()
+                utilProject = LogRepositoryImpl(logDatabase.logDao())
             }
+            return utilProject!!
+        }
     }
 }

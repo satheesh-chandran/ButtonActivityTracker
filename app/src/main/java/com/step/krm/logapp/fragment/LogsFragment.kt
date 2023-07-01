@@ -1,6 +1,8 @@
 package com.step.krm.logapp.fragment
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +30,12 @@ class LogsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        recyclerView.adapter = LogsViewAdapter(LogRepositoryImpl.instance.getAllLogs())
+        requireActivity().baseContext.let {
+            LogRepositoryImpl.instance(it).getAllLogs { logs ->
+                Handler(Looper.getMainLooper()).post {
+                    recyclerView.adapter = LogsViewAdapter(logs)
+                }
+            }
+        }
     }
 }
