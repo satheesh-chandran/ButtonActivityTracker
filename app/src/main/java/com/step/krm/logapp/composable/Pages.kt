@@ -16,10 +16,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.step.krm.logapp.R
-import com.step.krm.logapp.data.LogDTO
 import com.step.krm.logapp.data.LogRepository
 import java.sql.Date
 import java.sql.Timestamp
+
+@Composable
+fun ButtonActionTracker(
+    repository: LogRepository,
+    isOnFirstPage: Boolean,
+    pageToggler: () -> Unit
+) {
+    MaterialTheme {
+        if (isOnFirstPage) {
+            ButtonPage(repository = repository, pageToggler)
+        } else {
+            LogList(repository = repository)
+        }
+    }
+}
 
 
 @Composable
@@ -73,19 +87,21 @@ fun SimpleButton(onClick: () -> Unit, text: String) {
 }
 
 @Composable
-fun LogList(logs: List<LogDTO>) {
+fun LogList(repository: LogRepository) {
     MaterialTheme {
         LazyColumn {
-            items(
-                items = logs,
-                key = { task -> task.id }
-            ) { log ->
-                val stamp = Timestamp(log.timestamp)
-                val date = Date(stamp.time)
-                Text(
-                    text = "${log.id}) Button with ID - ${log.buttonId} clicked on $date",
-                    modifier = Modifier.padding(16.dp)
-                )
+            repository.getAllLogs { logs ->
+                items(
+                    items = logs,
+                    key = { task -> task.id }
+                ) { log ->
+                    val stamp = Timestamp(log.timestamp)
+                    val date = Date(stamp.time)
+                    Text(
+                        text = "${log.id}) Button with ID - ${log.buttonId} clicked on $date",
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
             }
         }
     }
