@@ -6,16 +6,16 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import com.step.krm.logapp.R
+import com.step.krm.logapp.composable.LogList
 import com.step.krm.logapp.data.LogRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class LogsFragment : Fragment() {
-    private lateinit var recyclerView: RecyclerView
 
     @Inject
     lateinit var repository: LogRepository
@@ -28,16 +28,13 @@ class LogsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView = view.findViewById<RecyclerView>(R.id.list).apply {
-            setHasFixedSize(true)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        repository.getAllLogs { logs ->
-            Handler(Looper.getMainLooper()).post {
-                recyclerView.adapter = LogsViewAdapter(logs)
+        Handler(Looper.getMainLooper()).post {
+            repository.getAllLogs { logs ->
+                view.apply {
+                    findViewById<ComposeView>(R.id.logs_compose_view).setContent {
+                        LogList(logs)
+                    }
+                }
             }
         }
     }
