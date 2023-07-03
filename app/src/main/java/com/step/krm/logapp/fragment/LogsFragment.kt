@@ -9,11 +9,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.step.krm.logapp.R
-import com.step.krm.logapp.data.LogRepositoryImpl
+import com.step.krm.logapp.data.LogRepository
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LogsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
 
+    @Inject
+    lateinit var repository: LogRepository
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,11 +35,9 @@ class LogsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().baseContext.let {
-            LogRepositoryImpl.instance(it).getAllLogs { logs ->
-                Handler(Looper.getMainLooper()).post {
-                    recyclerView.adapter = LogsViewAdapter(logs)
-                }
+        repository.getAllLogs { logs ->
+            Handler(Looper.getMainLooper()).post {
+                recyclerView.adapter = LogsViewAdapter(logs)
             }
         }
     }

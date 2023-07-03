@@ -7,9 +7,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.step.krm.logapp.R
-import com.step.krm.logapp.data.LogRepositoryImpl
+import com.step.krm.logapp.data.LogRepository
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ButtonFragment : Fragment() {
+    @Inject
+    lateinit var repository: LogRepository
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -19,15 +24,15 @@ class ButtonFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view.findViewById<Button>(R.id.button1).setOnClickListener {
-            requireActivity().baseContext.let { LogRepositoryImpl.instance(it).addLog(1) }
+            repository.addLog(1)
         }
 
         view.findViewById<Button>(R.id.button2).setOnClickListener {
-            requireActivity().baseContext.let { LogRepositoryImpl.instance(it).addLog(2) }
+            repository.addLog(2)
         }
 
         view.findViewById<Button>(R.id.button3).setOnClickListener {
-            requireActivity().baseContext.let { LogRepositoryImpl.instance(it).addLog(3) }
+            repository.addLog(3)
         }
 
         view.findViewById<Button>(R.id.all_logs).setOnClickListener {
@@ -38,7 +43,7 @@ class ButtonFragment : Fragment() {
         }
 
         view.findViewById<Button>(R.id.delete_logs).setOnClickListener {
-            requireActivity().baseContext.let { LogRepositoryImpl.instance(it).removeAllLogs()}
+            repository.removeAllLogs()
         }
     }
 }
